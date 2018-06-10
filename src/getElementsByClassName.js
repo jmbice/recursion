@@ -4,25 +4,21 @@
 // };
 
 // But instead we're going to implement it from scratch:
-var getElementsByClassName = function(className) {
-  var results = []; // MDN documents:  Returns an array-like object of all child elements which have all of the given class names. When called on the document object, the complete document is searched, including the root node.
-  var root = [document.body];
+var getElementsByClassName = function(className, node) {
+  node = node || document.body;
+  var results = [];
   var regEx = new RegExp("(^|\\s)" + className + "(\\s|$)");
 
-  var accessElements = function(input) {
-    for (var j = 0; j < input.length; j++) {
-      if (regEx.test(input[j].className)) {
-        results.push(input[j]);
-      } else {
-        null;
-      }
-      accessElements(input[j].children);
-    }
+  if (regEx.test(node.className)){
+    results.push(node);
   }
-  accessElements(root)
+
+  for (var i = 0; i < node.children.length; i++) {
+    var childResults = getElementsByClassName(className, node.children[i]);
+    results = results.concat(childResults);
+  }
 
   return results;
-
 };
 
 //We were encouraged to use, 'element.classList', 'element.childNodes', 'document.body'. This is what these terms look like:
